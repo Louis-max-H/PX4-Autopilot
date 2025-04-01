@@ -1234,7 +1234,7 @@ int SeptentrioDriver::process_message()
 			using Type = QualityIndicator::Type;
 
 			SEP_TRACE_PARSING("Processing QualityInd SBF message");
-
+			PX4_WARN("Processing QualityInd SBF message");
 			QualityInd quality_ind;
 
 			if (_sbf_decoder.parse(&quality_ind) == PX4_OK) {
@@ -1265,33 +1265,48 @@ int SeptentrioDriver::process_message()
 			using InfoMode = RFBand::InfoMode;
 
 			SEP_TRACE_PARSING("Processing RFStatus SBF message");
+			PX4_WARN("Received jamming signal");
 
 			RFStatus rf_status;
 
 			if (_sbf_decoder.parse(&rf_status) == PX4_OK) {
 				_message_gps_state.jamming_state = sensor_gps_s::JAMMING_STATE_OK;
+				PX4_WARN("Sizeof total: %i", sizeof(rf_status.rf_band));
+				PX4_WARN("Sizeof one  : %i", sizeof(rf_status.rf_band[0]));
+				PX4_WARN("n is        : %i", rf_status.n);
 				for (int i = 0; i < math::min(rf_status.n, static_cast<uint8_t>(sizeof(rf_status.rf_band) / sizeof(rf_status.rf_band[0]))); i++) {
+					PX4_WARN("Reading %i", i);
+
 					switch (rf_status.rf_band[i].info_mode) {
 					case InfoMode::Interference:
 						_message_gps_state.jamming_state = sensor_gps_s::JAMMING_STATE_CRITICAL;
+						PX4_WARN("Change jamming to critical");
+
 						break;
 					case InfoMode::Suppressed:
 					case InfoMode::Mitigated:
 						// Don't report mitigated when there is unmitigated interference in one band.
 						if (_message_gps_state.spoofing_state != sensor_gps_s::JAMMING_STATE_CRITICAL) {
-							_message_gps_state.jamming_state = sensor_gps_s::JAMMING_STATE_MITIGATED;	
+							_message_gps_state.jamming_state = sensor_gps_s::JAMMING_STATE_MITIGATED;
+							PX4_WARN("Received jamming mitigated");
 						}
 						break;
 					default:
+						PX4_WARN("Received jamming other");
+
 						break;
 					}
 				}
 				if (rf_status.flags_inauthentic_gnss_signals || rf_status.flags_inauthentic_navigation_message) {
 					_message_gps_state.spoofing_state = sensor_gps_s::SPOOFING_STATE_INDICATED;
+					PX4_WARN("Received jamming indicated");
 				}
 				else {
 					_message_gps_state.spoofing_state = sensor_gps_s::SPOOFING_STATE_NONE;
+					PX4_WARN("Received jamming NONE");
 				}
+			}else{
+				PX4_WARN("Parsing have failed.");
 			}
 
 			break;

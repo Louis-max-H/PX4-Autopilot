@@ -159,9 +159,13 @@ int Decoder::parse(QualityInd *message) const
 
 int Decoder::parse(RFStatus *message) const
 {
-	if (can_parse() && id() == BlockID::PVTGeodetic) {
+	if (can_parse() && id() == BlockID::RFStatus) {
 		memcpy(message, _message.payload, sizeof(RFStatus) - sizeof(RFStatus::rf_band));
 
+		PX4_WARN("Parse n=%i", message->n);
+		for(int i=0; i<10; i++){
+			PX4_WARN("-> %i", _message.payload[i]);
+		}
 		for (uint8_t i = 0; i < math::min(message->n, k_max_rfband_blocks); i++) {
 			memcpy(&message->rf_band[i], &_message.payload[sizeof(RFStatus) - sizeof(RFStatus::rf_band) + i *
 					message->sb_length], sizeof(RFBand));
