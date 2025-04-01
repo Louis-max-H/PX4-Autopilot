@@ -245,7 +245,7 @@ struct QualityInd {
 struct RFBand {
 	enum class InfoMode : uint8_t {
 		Suppressed   = 1,
-		Mitigated    = 2,
+		Canceled    = 2,
 		Interference = 8
 	};
 	uint32_t frequency;
