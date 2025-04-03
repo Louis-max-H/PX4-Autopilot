@@ -1300,7 +1300,7 @@ int SeptentrioDriver::process_message()
 					_message_gps_state.spoofing_state = sensor_gps_s::SPOOFING_STATE_INDICATED;
 				}
 				else{
-					_message_gps_state.spoofing_state = sensor_gps_s::SPOOFING_STATE_NONE;
+					_message_gps_state.spoofing_state = sensor_gps_s::SPOOFING_STATE_OK;
 				}
 			}
 
@@ -1664,7 +1664,7 @@ void SeptentrioDriver::publish()
 
 	if (_message_gps_state.spoofing_state != _spoofing_state) {
 
-		if (_message_gps_state.spoofing_state > sensor_gps_s::SPOOFING_STATE_NONE) {
+		if (_message_gps_state.spoofing_state > sensor_gps_s::SPOOFING_STATE_OK) {
 			SEP_WARN("GPS spoofing detected! (state: %d)", _message_gps_state.spoofing_state);
 		}
 

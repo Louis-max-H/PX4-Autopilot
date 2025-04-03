@@ -1221,7 +1221,7 @@ GPS::publish()
 
 		if (_report_gps_pos.spoofing_state != _spoofing_state) {
 
-			if (_report_gps_pos.spoofing_state > sensor_gps_s::SPOOFING_STATE_NONE) {
+			if (_report_gps_pos.spoofing_state > sensor_gps_s::SPOOFING_STATE_OK) {
 				PX4_WARN("GPS spoofing detected! (state: %d)", _report_gps_pos.spoofing_state);
 			}
 

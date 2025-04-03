@@ -146,7 +146,7 @@ private:
 				msg.spoofing_state = 0;
 				break;
 
-			case sensor_gps_s::SPOOFING_STATE_NONE:
+			case sensor_gps_s::SPOOFING_STATE_OK:
 				msg.spoofing_state = 1;
 				break;
 

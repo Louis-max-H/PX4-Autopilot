@@ -39,7 +39,7 @@ uint8 jamming_state		# indicates whether jamming has been detected or suspected 
 int32 jamming_indicator		# indicates jamming is occurring
 
 uint8 SPOOFING_STATE_UNKNOWN   = 0 #default
-uint8 SPOOFING_STATE_NONE      = 1
+uint8 SPOOFING_STATE_OK      = 1
 uint8 SPOOFING_STATE_INDICATED = 2
 uint8 SPOOFING_STATE_MULTIPLE  = 3
 uint8 SPOOFING_STATE_MITIGATED = 4
