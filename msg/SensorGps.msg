@@ -30,12 +30,12 @@ float32 vdop			# Vertical dilution of precision
 int32 noise_per_ms		# GPS noise per millisecond
 uint16 automatic_gain_control   # Automatic gain control monitor
 
-uint8 JAMMING_STATE_UNKNOWN   = 0 #default
-uint8 JAMMING_STATE_OK        = 1
-uint8 JAMMING_STATE_WARNING   = 2
-uint8 JAMMING_STATE_CRITICAL  = 3
-uint8 JAMMING_STATE_MITIGATED = 4
-uint8 jamming_state		# indicates whether jamming has been detected or suspected by the receivers. O: Unknown, 1: OK, 2: Warning, 3: Critical
+uint8 JAMMING_STATE_UNKNOWN  = 0
+uint8 JAMMING_STATE_OK       = 1
+uint8 JAMMING_STATE_PROTECTED= 2
+uint8 JAMMING_STATE_WARNING  = 3
+uint8 JAMMING_STATE_CRITICAL = 4
+uint8 jamming_state		# indicates whether jamming has been detected or suspected by the receivers. O: Unknown, 1: OK, 2: Protected, 3: Warning, 4: Critical
 int32 jamming_indicator		# indicates jamming is occurring
 
 uint8 SPOOFING_STATE_UNKNOWN   = 0 #default

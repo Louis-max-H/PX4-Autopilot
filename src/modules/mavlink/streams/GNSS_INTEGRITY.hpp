@@ -129,13 +129,15 @@ private:
 				msg.jamming_state = 1;
 				break;
 
-			case sensor_gps_s::JAMMING_STATE_MITIGATED:
+			case sensor_gps_s::JAMMING_STATE_PROTECTED:
 				msg.jamming_state = 2;
 				break;
 
 			case sensor_gps_s::JAMMING_STATE_WARNING:
-			case sensor_gps_s::JAMMING_STATE_CRITICAL:
 				msg.jamming_state = 3;
+				break;
+			case sensor_gps_s::JAMMING_STATE_CRITICAL:
+				msg.jamming_state = 4;
 				break;
 			}
 

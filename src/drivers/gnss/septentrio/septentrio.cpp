@@ -1284,9 +1284,11 @@ int SeptentrioDriver::process_message()
 					case InfoMode::Interference:
 						_message_gps_state.jamming_state = sensor_gps_s::JAMMING_STATE_CRITICAL;
 						break;
-					case InfoMode:::Mitigated
+					case InfoMode::Mitigated:
+						_message_gps_state.jamming_state = sensor_gps_s::JAMMING_STATE_WARNING;
+						break;
 					case InfoMode::Suppressed:
-						_message_gps_state.jamming_state = sensor_gps_s::JAMMING_STATE_MITIGATED;
+						_message_gps_state.jamming_state = sensor_gps_s::JAMMING_STATE_PROTECTED;
 						break;
 					}
 				}
@@ -1671,7 +1673,7 @@ void SeptentrioDriver::publish()
 
 	if (_message_gps_state.jamming_state != _jamming_state) {
 
-		if (_message_gps_state.jamming_state > sensor_gps_s::JAMMING_STATE_WARNING) {
+		if (_message_gps_state.jamming_state > sensor_gps_s::JAMMING_STATE_UNKNOWN) {
 			SEP_WARN("GPS jamming detected! (state: %d) (indicator: %d)", _message_gps_state.jamming_state,
 					(uint8_t)_message_gps_state.jamming_indicator);
 		}
