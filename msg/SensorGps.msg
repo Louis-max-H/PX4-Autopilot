@@ -42,7 +42,6 @@ uint8 SPOOFING_STATE_UNKNOWN   = 0 #default
 uint8 SPOOFING_STATE_OK      = 1
 uint8 SPOOFING_STATE_INDICATED = 2
 uint8 SPOOFING_STATE_MULTIPLE  = 3
-uint8 SPOOFING_STATE_MITIGATED = 4
 uint8 spoofing_state		# indicates whether spoofing has been detected or suspected by the receivers. O: Unknown, 1: OK, 2: Warning, 3: Critical
 
 # Combined authentication state (e.g. Galileo OSNMA)

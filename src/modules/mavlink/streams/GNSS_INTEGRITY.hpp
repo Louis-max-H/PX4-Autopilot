@@ -150,11 +150,10 @@ private:
 				msg.spoofing_state = 1;
 				break;
 
-			case sensor_gps_s::SPOOFING_STATE_MITIGATED:
+			case sensor_gps_s::SPOOFING_STATE_INDICATED:
 				msg.spoofing_state = 2;
 				break;
 
-			case sensor_gps_s::SPOOFING_STATE_INDICATED:
 			case sensor_gps_s::SPOOFING_STATE_MULTIPLE:
 				msg.spoofing_state = 3;
 				break;
