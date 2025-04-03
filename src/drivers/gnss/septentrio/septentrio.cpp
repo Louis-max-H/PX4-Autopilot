@@ -1269,27 +1269,35 @@ int SeptentrioDriver::process_message()
 			RFStatus rf_status;
 
 			if (_sbf_decoder.parse(&rf_status) == PX4_OK) {
-				_message_gps_state.jamming_state = sensor_gps_s::JAMMING_STATE_OK;
+				int mode = 0;
+
 				for (int i = 0; i < math::min(rf_status.n, static_cast<uint8_t>(sizeof(rf_status.rf_band) / sizeof(rf_status.rf_band[0]))); i++) {
-					switch (rf_status.rf_band[i].info_mode) {
+					// take the worst rf band to show
+					mode = math::max(mode, static_cast<uint8_t>(rf_status.rf_band[i].info_mode) & 0x0F);
+				}
+
+				if(mode == 0){
+					_message_gps_state.jamming_state = sensor_gps_s::JAMMING_STATE_OK;
+				}
+				else{
+					switch (static_cast<InfoMode>(mode)){
 					case InfoMode::Interference:
 						_message_gps_state.jamming_state = sensor_gps_s::JAMMING_STATE_CRITICAL;
 						break;
+					case InfoMode:::Mitigated
 					case InfoMode::Suppressed:
-					case InfoMode::Mitigated:
-						// Don't report mitigated when there is unmitigated interference in one band.
-						if (_message_gps_state.spoofing_state != sensor_gps_s::JAMMING_STATE_CRITICAL) {
-							_message_gps_state.jamming_state = sensor_gps_s::JAMMING_STATE_MITIGATED;	
-						}
-						break;
-					default:
+						_message_gps_state.jamming_state = sensor_gps_s::JAMMING_STATE_MITIGATED;
 						break;
 					}
 				}
-				if (rf_status.flags_inauthentic_gnss_signals || rf_status.flags_inauthentic_navigation_message) {
+
+				if(rf_status.flags_inauthentic_gnss_signals && rf_status.flags_inauthentic_navigation_message){
+					_message_gps_state.spoofing_state = sensor_gps_s::SPOOFING_STATE_MULTIPLE;
+				}
+				else if(rf_status.flags_inauthentic_gnss_signals || rf_status.flags_inauthentic_navigation_message){
 					_message_gps_state.spoofing_state = sensor_gps_s::SPOOFING_STATE_INDICATED;
 				}
-				else {
+				else{
 					_message_gps_state.spoofing_state = sensor_gps_s::SPOOFING_STATE_NONE;
 				}
 			}
