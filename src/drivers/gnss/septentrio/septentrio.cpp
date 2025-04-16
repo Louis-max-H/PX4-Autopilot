@@ -1272,7 +1272,7 @@ int SeptentrioDriver::process_message()
 				int mode = 0;
 
 				for (int i = 0; i < math::min(rf_status.n, static_cast<uint8_t>(sizeof(rf_status.rf_band) / sizeof(rf_status.rf_band[0]))); i++) {
-					// take the worst rf band to show
+					// Takes the most severe state
 					mode = math::max(mode, static_cast<uint8_t>(rf_status.rf_band[i].info_mode) & 0x0F);
 				}
 
@@ -1284,23 +1284,20 @@ int SeptentrioDriver::process_message()
 					case InfoMode::Interference:
 						_message_gps_state.jamming_state = sensor_gps_s::JAMMING_STATE_CRITICAL;
 						break;
+					case InfoMode::Suppressed:
 					case InfoMode::Mitigated:
 						_message_gps_state.jamming_state = sensor_gps_s::JAMMING_STATE_WARNING;
 						break;
-					case InfoMode::Suppressed:
-						_message_gps_state.jamming_state = sensor_gps_s::JAMMING_STATE_PROTECTED;
+					default:
 						break;
 					}
 				}
 
-				if(rf_status.flags_inauthentic_gnss_signals && rf_status.flags_inauthentic_navigation_message){
-					_message_gps_state.spoofing_state = sensor_gps_s::SPOOFING_STATE_MULTIPLE;
-				}
-				else if(rf_status.flags_inauthentic_gnss_signals || rf_status.flags_inauthentic_navigation_message){
+				if(rf_status.flags_inauthentic_gnss_signals || rf_status.flags_inauthentic_navigation_message){
 					_message_gps_state.spoofing_state = sensor_gps_s::SPOOFING_STATE_INDICATED;
 				}
 				else{
-					_message_gps_state.spoofing_state = sensor_gps_s::SPOOFING_STATE_OK;
+					_message_gps_state.spoofing_state = sensor_gps_s::SPOOFING_STATE_NONE;
 				}
 			}
 
@@ -1664,7 +1661,7 @@ void SeptentrioDriver::publish()
 
 	if (_message_gps_state.spoofing_state != _spoofing_state) {
 
-		if (_message_gps_state.spoofing_state > sensor_gps_s::SPOOFING_STATE_OK) {
+		if (_message_gps_state.spoofing_state > sensor_gps_s::SPOOFING_STATE_NONE) {
 			SEP_WARN("GPS spoofing detected! (state: %d)", _message_gps_state.spoofing_state);
 		}
 
@@ -1673,7 +1670,7 @@ void SeptentrioDriver::publish()
 
 	if (_message_gps_state.jamming_state != _jamming_state) {
 
-		if (_message_gps_state.jamming_state > sensor_gps_s::JAMMING_STATE_UNKNOWN) {
+		if (_message_gps_state.jamming_state > sensor_gps_s::JAMMING_STATE_OK) {
 			SEP_WARN("GPS jamming detected! (state: %d) (indicator: %d)", _message_gps_state.jamming_state,
 					(uint8_t)_message_gps_state.jamming_indicator);
 		}
