@@ -81,7 +81,7 @@ private:
 			send_msg = true;
 		}
 
-		if(now - _last_gps_update_ts < kNoGpsSendInterval){
+		if (now - _last_gps_update_ts < kNoGpsSendInterval) {
 			msg.id = gps.device_id;
 			msg.system_errors = gps.system_error;
 			msg.authentication_state = gps.authentication_state;
@@ -95,12 +95,13 @@ private:
 			send_msg = true;
 		}
 
-		if(now - _last_status_update_ts < kNoGpsSendInterval){
+		if (now - _last_status_update_ts < kNoGpsSendInterval) {
 			msg.corrections_quality	= status.quality_corrections;
 			msg.system_status_summary = status.quality_receiver;
 			msg.gnss_signal_quality = status.quality_gnss_signals;
 			msg.post_processing_quality = status.quality_post_processing;
-		}else{
+
+		} else {
 			msg.corrections_quality	= 255;
 			msg.system_status_summary = 255;
 			msg.gnss_signal_quality = 255;
@@ -112,7 +113,7 @@ private:
 			send_msg = true;
 		}
 
-		if(send_msg){
+		if (send_msg) {
 			msg.raim_hfom = UINT16_MAX;
 			msg.raim_vfom = UINT16_MAX;
 
